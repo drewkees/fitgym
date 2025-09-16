@@ -2,9 +2,13 @@ import { Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { GymSidebar } from "@/components/GymSidebar";
 import { Button } from "@/components/ui/button";
-import { Bell, Settings, User } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Bell, Settings, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export function GymLayout() {
+  const { profile, signOut } = useAuth();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -27,9 +31,25 @@ export function GymLayout() {
                 <Button variant="ghost" size="icon">
                   <Settings className="h-5 w-5" />
                 </Button>
-                <Button variant="ghost" size="icon">
-                  <User className="h-5 w-5" />
-                </Button>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="relative">
+                      <User className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-2 py-2">
+                      <p className="text-sm font-medium">{profile?.full_name || 'User'}</p>
+                      <p className="text-xs text-muted-foreground capitalize">{profile?.role || 'Member'}</p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={signOut} className="text-red-600 focus:text-red-600">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </header>
